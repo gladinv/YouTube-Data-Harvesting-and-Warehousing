@@ -20,7 +20,7 @@ import pymongo
 import sqlite3
 
 # Function to retrieve channel data using the YouTube API
-def get_channel_data(channel_id):
+def get_channel_data(api_key, channel_id):
     # Set up the YouTube API client
     api_service_name = "youtube"
     api_version = "v3"
@@ -249,5 +249,5 @@ elif choice == "SQL Data Warehouse":
 # Set up the about page
 elif choice == "About":
     st.title("About")
-    st.write("This app was created by [Your Name] as a project for [Course Name].")
+    st.write("This app was created by Gladin Varghese as a project for GUVI.")
 
