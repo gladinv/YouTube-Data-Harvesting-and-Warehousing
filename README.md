@@ -1,68 +1,77 @@
 # YouTube-Data-Harvesting-and-Warehousing
 Python scripting, Data Collection, MongoDB, Streamlit, API integration, Data Managment using MongoDB (Atlas) and SQL
 
-Import the necessary libraries:
+Sure! Here's a stepwise walkthrough of the provided code:
 
-Import the build function from googleapiclient.discovery to interact with the YouTube Data API.
-Import streamlit for building the web application.
-Import pymongo for interacting with MongoDB.
-Import sqlite3 for interacting with SQLite.
-Import pandas to work with data in tabular format.
-Set up the YouTube API client:
+Step 1: Import the required libraries:
+```python
+import streamlit as st
+import pandas as pd
+import pymongo
+from sqlalchemy import create_engine
+from sqlalchemy import text
+from googleapiclient.discovery import build
+import json
+from googleapiclient.errors import HttpError
+import numpy as np
+```
 
-Provide the API key obtained from the Google Developers Console.
-Set the API service name as "youtube" and the version as "v3".
-Use the build function to create a YouTube API client instance.
-Define functions:
+Step 2: Create a connection to the SQLite database and YouTube API:
+```python
+engine = create_engine('sqlite:///youtube.db', echo=False)
+conn = engine.connect()
 
-get_channel_data(channel_id): Retrieves channel data using the YouTube API.
+api_key = "YOUR_API_KEY"
+youtube = build('youtube', 'v3', developerKey=api_key)
 
-Set up the YouTube API client using OAuth 2.0 authentication.
-Call the YouTube API to retrieve the channel data and parse the response.
-Store the channel data and video data in a dictionary.
-Return the channel data.
-store_data_in_mongodb(channel_data): Stores the channel data in a MongoDB data lake.
+client = pymongo.MongoClient("mongodb://localhost:27017/")
+db = client.Youtube_Data
+```
 
-Set up the MongoDB client connection.
-Select the database and collection to store the data.
-Insert the channel data into the collection.
-migrate_data_to_sqlite(): Migrates data from the MongoDB data lake to a SQLite data warehouse.
+Step 3: Define functions for fetching and processing YouTube data:
+- `check_channel_id(channel_id)`: Checks if a given YouTube channel ID is valid.
+- `get_channel_info(channel_id)`: Retrieves information about a YouTube channel.
+- `get_channel_details(channel_id)`: Retrieves detailed information about a YouTube channel.
+- `get_channel_videos(channel_id)`: Retrieves the video IDs of all videos in a YouTube channel.
+- `get_video_details(v_ids)`: Retrieves detailed information about a list of video IDs.
+- `get_comments_details(v_id)`: Retrieves details of comments for a given video ID.
+- `channels_name()`: Retrieves the names of all channels stored in the MongoDB database.
+- `insert_into_channels()`: Inserts channel data into the SQLite database.
+- `insert_into_videos()`: Inserts video data into the SQLite database.
+- `insert_into_comments()`: Inserts comment data into the SQLite database.
+- `execute_query(question_index)`: Executes predefined queries on the SQLite database.
+```python
+# The functions mentioned above are defined in the provided code.
+```
 
-Set up the MongoDB client connection.
-Set up the SQLite connection and cursor.
-Create tables in the SQLite database if they don't exist.
-Retrieve data from the MongoDB data lake.
-Insert the data into the SQLite tables.
-Commit the changes and close the connection.
-query_sqlite_data(selected_channel): Executes a SQL query to retrieve data from the SQLite data warehouse.
+Step 4: Define a list of questions for data analysis.
+```python
+question_list = [
+    "What are the names of all the videos and their corresponding channels?",
+    "Which channels have the most number of videos, and how many videos do they have?",
+    "What are the top 10 most viewed videos and their respective channels?",
+    "How many comments were made on each video, and what are their corresponding video names?",
+    "Which videos have the highest number of likes, and what are their corresponding channel names?",
+    "What is the total number of likes and dislikes for each video, and what are their corresponding video names?",
+    "What is the total number of views for each channel, and what are their corresponding channel names?",
+    "What are the names of all the channels that have published videos in the year 2022?",
+    "What is the average duration of all videos in each channel, and what are their corresponding channel names?",
+    "Which videos have the highest number of comments, and what are their corresponding channel names?"
+]
+```
 
-Set up the SQLite connection and cursor.
-Execute a SQL query to join the channel_data and channel_details tables based on the selected channel.
-Fetch the data and store it in a DataFrame.
-Close the connection.
-Return the DataFrame.
-Define the Streamlit application:
+Step 5: Define the `execute_query(question_index)` function to execute queries based on the selected question index.
+```python
+# The execute_query function is already defined in the provided code.
+```
 
-Define the app() function to set up the Streamlit application.
-Use st.set_page_config() to configure the page title.
-Set up the sidebar with menu options: Home, Data Collection, SQL Data Warehouse, and About.
-Implement the Home page:
+Step 6: Create the Streamlit application layout and logic.
+```python
+# Page Configuration
+st.set_page_config(page_title="YouTube Data Harvesting and Warehousing",
+                   layout="wide",
+                   initial_sidebar_state="expanded")
 
-If the user selects the "Home" option, display a welcome message.
-Implement the Data Collection page:
+# Menu selection
+selected_menu = st.sidebar.radio("Select a Menu", ("Fetch & Save", "Migrate", "Analyze data!"))
 
-If the user selects the "Data Collection" option:
-Get the API key from the user using st.text_input().
-Prompt the user to enter YouTube channel IDs.
-Collect data for each channel using the get_channel_data() function and store it in the MongoDB data lake.
-Display a message indicating that data collection is complete.
-Provide a button to view the data in MongoDB.
-Implement the SQL Data Warehouse page:
-
-If the user selects the "SQL Data Warehouse" option:
-Display a dropdown menu with the available channels retrieved from the MongoDB data lake.
-Provide a button to migrate the data from MongoDB to SQLite using the migrate_data_to_sqlite() function.
-Provide a button to view the data in SQLite by executing the query_sqlite_data() function and displaying the result.
-Implement the About page:
-
-If the user selects the "About" option, display information about the application.
