@@ -1,7 +1,7 @@
 # YouTube-Data-Harvesting-and-Warehousing
 Python scripting, Data Collection, MongoDB, Streamlit, API integration, Data Managment using MongoDB (Atlas) and SQL
 
-Sure! Here's a stepwise walkthrough of the provided code:
+Here's a stepwise walkthrough of the code:
 
 Step 1: Import the required libraries:
 ```python
